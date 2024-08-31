@@ -19,10 +19,7 @@ public class CustomUserDetailService implements UserDetailsService {
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     // Load user from database by username
     log.info("-------- Custom User Details Service --------");
-    log.info("Inside loadUserByUsername - CustomUserDetailService");
-    log.info("Email : " + email);
     Student student = this.studentRepo.findByEmail(email);
-    log.info("Student : " + student.toString());
     return org.springframework.security.core.userdetails.User.builder()
         .username(student.getEmail())
         .password(student.getPassword())

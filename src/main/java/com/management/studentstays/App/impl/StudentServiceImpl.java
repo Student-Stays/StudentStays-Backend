@@ -49,16 +49,11 @@ public class StudentServiceImpl implements StudentService {
   @Override
   @Transactional
   public RegisterStudentDTO registerNewUser(RegisterStudentDTO studentDTO) {
-    System.out.println("Inside registerNewUser" + studentDTO);
-
     Student student = new Student();
 
     student.setName(studentDTO.getStudentName());
     student.setEmail(studentDTO.getEmailAddress());
-    String pass = studentDTO.getPassword();
-    System.out.println("studentDTO.getPassword() : " + pass);
     String encodedPassword = passwordEncoder.encode(studentDTO.getPassword());
-    System.out.println("encodedPassword : " + encodedPassword);
     student.setPassword(encodedPassword);
 
     student.setAadharCardNumber(studentDTO.getAadharCardNumber());
@@ -125,7 +120,6 @@ public class StudentServiceImpl implements StudentService {
         studentRepo
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Student", "Student ID ", id));
-    System.out.println("student : " + student);
     StudentDTO studentdto = modelMapper.map(student, StudentDTO.class);
 
     if (studentdto.getProfileImagePath() != null && !studentdto.getProfileImagePath().isBlank()) {
@@ -167,14 +161,9 @@ public class StudentServiceImpl implements StudentService {
 
   @Override
   public Student getStudent(int id) {
-    System.out.println("----- getStudent -----");
-    Student student =
-        studentRepo
-            .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Student", "Student ID", id));
-    System.out.println("student : " + student);
-    System.out.println("payment : " + student.getPayments());
-    return student;
+    return studentRepo
+        .findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Student", "Student ID", id));
   }
 
   @Override
@@ -213,10 +202,7 @@ public class StudentServiceImpl implements StudentService {
   @Override
   @Transactional
   public StudentDTO updateStudent(int studentId, StudentDTO studentdto) {
-    System.out.println("Inside updateStudent Implementation");
-
     Student student = studentRepo.findById(studentId).orElseThrow();
-    System.out.println("student : " + student);
 
     student.setName(studentdto.getName());
     student.setEmail(studentdto.getEmail());
@@ -228,7 +214,6 @@ public class StudentServiceImpl implements StudentService {
     if (student.getDueDate() == null) student.setDueDate(studentdto.getRentday());
 
     Room room = roomRepo.findByRoomNumber(student.getRoom().getRoomNumber());
-    System.out.println("room : " + room);
     student.setRoom(room);
 
     student.setDateOfJoining(studentdto.getDateOfJoining());
@@ -245,11 +230,7 @@ public class StudentServiceImpl implements StudentService {
       StudentDTO studentdto,
       MultipartFile profilePicture,
       MultipartFile aadharCardPicture) {
-    System.out.println("Inside updateStudent2 Implementation");
-    System.out.println("StudentDTO : " + studentdto);
     Student student = studentRepo.findById(studentId).orElseThrow();
-    System.out.println("student : " + student);
-
     student.setName(studentdto.getName());
     student.setEmail(studentdto.getEmail());
     student.setPhoneNumber(studentdto.getPhoneNumber());
@@ -260,7 +241,6 @@ public class StudentServiceImpl implements StudentService {
     if (student.getDueDate() == null) student.setDueDate(studentdto.getRentday());
 
     Room room = roomRepo.findByRoomNumber(studentdto.getRoom().getRoomNumber());
-    System.out.println("room : " + room);
     student.setRoom(room);
 
     student.setDateOfJoining(studentdto.getDateOfJoining());
@@ -282,13 +262,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     Student savedStudent = studentRepo.save(student);
-    System.out.println("savedStudent : " + savedStudent);
-    StudentDTO savedStudentDTO = modelMapper.map(savedStudent, StudentDTO.class);
-    System.out.println("savedStudentDTO : " + savedStudentDTO);
-
-    System.out.println("savedStudentDTO : " + savedStudentDTO);
-
-    return savedStudentDTO;
+    return modelMapper.map(savedStudent, StudentDTO.class);
   }
 
   @Override
@@ -327,11 +301,7 @@ public class StudentServiceImpl implements StudentService {
     List<StudentDTO> data = this.getAllStudents();
     System.out.println("data : " + data);
 
-    List<StudentDTO> filteredData =
-        data.stream().filter(StudentDTO::isPaymentDue).collect(Collectors.toList());
-    System.out.println("filteredData : " + filteredData);
-
-    return filteredData;
+    return data.stream().filter(StudentDTO::isPaymentDue).collect(Collectors.toList());
   }
 
   @Override

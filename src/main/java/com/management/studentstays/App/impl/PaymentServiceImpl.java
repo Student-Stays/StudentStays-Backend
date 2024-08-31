@@ -31,7 +31,6 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public PaymentDTO createPayment(PaymentDTO paymentdto, int studentID) {
-    System.out.print("-------- createPayment IMPL---------");
     Student student = studentService.getStudent(studentID);
     Payment payment = modelMapper.map(paymentdto, Payment.class);
 

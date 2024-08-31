@@ -28,8 +28,6 @@ public class EmailService {
 
   public HashMap<String, String> renderTemplate(
       String templateName, HashMap<String, String> emailContent) throws IOException {
-    log.info("----- renderTemplate -----");
-
     HashMap<String, String> templateData = new HashMap<>();
 
     EmailTemplate template =
@@ -37,7 +35,6 @@ public class EmailService {
             .findByName(templateName)
             .orElseThrow(() -> new EmailTemplateNotFoundException(templateName));
 
-    log.info("template : " + template);
     templateData.put("recipient", template.getRecipient());
     templateData.put("subject", template.getSubject());
 
@@ -53,17 +50,14 @@ public class EmailService {
   }
 
   private String loadTemplateContent(String templateName) throws IOException {
-    log.info("----- loadTemplateContent -----");
     Resource resource =
         resourceLoader.getResource("classpath:templates/Email template/" + templateName + ".html");
-    log.info("resource : " + resource);
     try (InputStream inputStream = resource.getInputStream()) {
       return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
     }
   }
 
   public void sendSimpleMessage(String templateName, HashMap<String, String> emailContent) {
-    log.info("----- sendSimpleMessage -----");
     try {
       HashMap<String, String> templateData = renderTemplate(templateName, emailContent);
 

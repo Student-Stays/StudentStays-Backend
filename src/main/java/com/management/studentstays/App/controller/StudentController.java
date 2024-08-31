@@ -68,12 +68,6 @@ public class StudentController {
       @PathVariable Integer studentID,
       @RequestParam(value = "profileImage", required = false) MultipartFile profilePicture,
       @RequestParam(value = "aadharCardImage", required = false) MultipartFile aadharCardPicture) {
-    System.out.println("Inside updateStudent Controller");
-    System.out.println("Studentdto : " + studentdto);
-    System.out.println("StudentID : " + studentID);
-    System.out.println("profilePicture : " + profilePicture);
-    System.out.println("aadharCardPicture : " + aadharCardPicture);
-
     ObjectMapper objectMapper = new ObjectMapper();
     StudentDTO studentDTO = null;
     try {
@@ -81,7 +75,6 @@ public class StudentController {
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
-    System.out.println("studentDTO After parsing : " + studentDTO);
 
     StudentDTO updatedStudent =
         service.updateStudent2(studentID, studentDTO, profilePicture, aadharCardPicture);
@@ -96,22 +89,16 @@ public class StudentController {
 
   @GetMapping("/student/{studentID}")
   public ResponseEntity<StudentResponseDTO> fetchByStudentID(@PathVariable Integer studentID) {
-    System.out.println("----- Inside fetchByStudentID -----");
     StudentDTO student = service.getStudentById(studentID);
-    System.out.println("student BEFORE payment cal: " + student.getPayments());
-
     StudentResponseDTO studentResponse = modelMapper.map(student, StudentResponseDTO.class);
     return new ResponseEntity<StudentResponseDTO>(studentResponse, HttpStatus.OK);
   }
 
   @GetMapping("/student/email/{email}")
   public ResponseEntity<StudentDTO> fetchStudentbyEmail(@PathVariable String email) {
-    System.out.println("Inside fetchStudentbyEmail");
     Student student = repo.findByEmail(email);
     if (student == null) return null;
-    System.out.println("Student : " + student);
     StudentDTO studentDTO = modelMapper.map(student, StudentDTO.class);
-    System.out.println("StudentDTO : " + studentDTO);
     return new ResponseEntity<StudentDTO>(studentDTO, HttpStatus.OK);
   }
 
