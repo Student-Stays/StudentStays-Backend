@@ -44,15 +44,9 @@ public class AuthController {
 
   @PostMapping("/login")
   public ResponseEntity<JWTResponse> login(@RequestBody JWTRequest request) {
-    log.info("--------- Auth Controller - LOGIN --------");
-    log.info("request : " + request);
     this.doAuthenticate(request.getEmail(), request.getPassword());
-    log.info("after doAuthenticate");
     UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-    log.info("UserDetails after: " + userDetails);
-
     String token = this.helper.generateToken(userDetails);
-    log.info("token : " + token);
 
     Student student = studentRepo.findByEmail(request.getEmail());
     StudentDTO studentDTO = modelMapper.map(student, StudentDTO.class);
@@ -64,15 +58,13 @@ public class AuthController {
             .studentId(String.valueOf(studentDTO.getId()))
             .role(studentDTO.getRoles().get(0).getName())
             .build();
-    log.info("response : " + response);
+
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
   private void doAuthenticate(String email, String password) {
-    log.info("------ doAuthenticate ------");
     UsernamePasswordAuthenticationToken authentication =
         new UsernamePasswordAuthenticationToken(email, password);
-    log.info("authentication : " + authentication);
     try {
       manager.authenticate(authentication);
     } catch (BadCredentialsException e) {
@@ -83,7 +75,6 @@ public class AuthController {
   @PostMapping("/register")
   public ResponseEntity<RegisterStudentDTO> registerNewUser(
       @RequestBody RegisterStudentDTO studentDTO) {
-    System.out.println("Inside registerNewUser");
     RegisterStudentDTO registeredUser = studentService.registerNewUser(studentDTO);
     return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
   }

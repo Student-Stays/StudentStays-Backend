@@ -29,24 +29,15 @@ public class FileController {
   @PostMapping("/student/{studentId}")
   public ResponseEntity<StudentDTO> fileUpload(
       @RequestParam("image") MultipartFile image, @PathVariable Integer studentId) {
-    System.out.println("Inside fileUpload");
-    System.out.println("image : " + image);
-    System.out.println("studentId : " + studentId);
-
     StudentDTO student = studentService.getStudentById(studentId);
-    System.out.println("student : " + student);
     String fileName = null;
     try {
       fileName = this.fileService.uploadImage(path, image);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    System.out.println("fileName : " + fileName);
     student.setProfileImagePath(fileName);
-    System.out.println("after student : " + student);
     StudentDTO updatedStudent = studentService.updateStudent(studentId, student);
-    System.out.println("-------------------------------");
-    System.out.println("updatedStudent : " + updatedStudent);
     return new ResponseEntity<StudentDTO>(updatedStudent, HttpStatus.OK);
   }
 }

@@ -34,9 +34,6 @@ public class PaymentController {
 
   @PostMapping("/payment/createOrder")
   public ResponseEntity<String> createOrder(@RequestBody Map<String, Object> data) {
-    System.out.println("Data : " + data);
-    System.out.println("amount : " + data.get("amount"));
-
     try {
       int amount = Integer.parseInt(data.get("amount").toString());
       Order order = getOrder(amount);
@@ -82,16 +79,12 @@ public class PaymentController {
   @PostMapping("/payment/{studentID}")
   public ResponseEntity<PaymentDTO> pay(
       @RequestBody PaymentDTO paymentdto, @PathVariable String studentID) {
-    System.out.println("----- pay -----");
-    System.out.println("studentID : " + studentID);
     PaymentDTO paid = paymnetService.createPayment(paymentdto, Integer.parseInt(studentID));
     return new ResponseEntity<PaymentDTO>(paid, HttpStatus.OK);
   }
 
   @PostMapping("/payment/isDue/{studentID}")
   public ResponseEntity<String> updateIsDueForStudent(@PathVariable String studentID) {
-    System.out.println("----- updateIsDueForStudent -----");
-    System.out.println("studentID : " + studentID);
     paymnetService.updateIsDue(Integer.parseInt(studentID));
     return new ResponseEntity<String>("Successfull", HttpStatus.OK);
   }

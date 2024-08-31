@@ -22,12 +22,9 @@ public class RentPaymentSchedule {
       // handle the case where student.getDueDate is null
       if (student.getDueDate() == null) return false;
       String rentDayString = student.getDueDate().trim();
-      System.out.println("rentDayString: " + rentDayString);
       LocalDate rentDay = LocalDate.parse(rentDayString);
       LocalDate currentDate = LocalDate.now();
       //            LocalDate currentDate = LocalDate.parse("2024-10-10");
-      System.out.println("Rent Day: " + rentDay);
-      System.out.println("Current Date: " + currentDate);
 
       return (currentDate.isEqual(rentDay) || currentDate.isAfter(rentDay))
           && !isPaymentMade(student);
