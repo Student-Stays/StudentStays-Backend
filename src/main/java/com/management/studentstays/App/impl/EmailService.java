@@ -33,16 +33,11 @@ public class EmailService {
     EmailTemplate template =
         templateRepository
             .findByName(templateName)
-
-
             .orElseThrow(() -> new EmailTemplateNotFoundException(templateName));
 
     templateData.put("recipient", template.getRecipient());
 
-
-    templateData.put("subject",
-
-            template.getSubject());
+    templateData.put("subject", template.getSubject());
 
     String templateContent = loadTemplateContent(templateName);
 
