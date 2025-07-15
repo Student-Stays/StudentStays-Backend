@@ -19,6 +19,8 @@ public class RentPaymentSchedule {
 
   public boolean isPaymentDue(StudentDTO student) {
     try {
+
+
       // handle the case where student.getDueDate is null
       if (student.getDueDate() == null) return false;
       String rentDayString = student.getDueDate().trim();
@@ -28,6 +30,9 @@ public class RentPaymentSchedule {
 
       return (currentDate.isEqual(rentDay) || currentDate.isAfter(rentDay))
           && !isPaymentMade(student);
+
+
+
     } catch (DateTimeParseException e) {
       System.err.println("Error parsing rent day: " + e.getMessage());
       return false;
