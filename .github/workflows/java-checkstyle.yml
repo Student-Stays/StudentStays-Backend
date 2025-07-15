@@ -17,6 +17,7 @@ concurrency:
 
 jobs:
   java-checkstyle:
+    name: java-checkstyle
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
