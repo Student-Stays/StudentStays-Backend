@@ -36,6 +36,7 @@ public class EmailService {
             .orElseThrow(() -> new EmailTemplateNotFoundException(templateName));
 
     templateData.put("recipient", template.getRecipient());
+
     templateData.put("subject", template.getSubject());
 
     String templateContent = loadTemplateContent(templateName);
