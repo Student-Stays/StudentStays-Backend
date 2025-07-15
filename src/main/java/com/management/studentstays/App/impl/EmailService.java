@@ -32,18 +32,23 @@ public class EmailService {
 
     EmailTemplate template =
         templateRepository
+
             .findByName(templateName)
+
             .orElseThrow(() -> new EmailTemplateNotFoundException(templateName));
 
     templateData.put("recipient", template.getRecipient());
 
     templateData.put("subject", template.getSubject());
 
-    String templateContent = loadTemplateContent(templateName);
+    String templateContent =
+
+            loadTemplateContent(templateName);
 
     for (HashMap.Entry<String, String> entry : emailContent.entrySet()) {
       String placeholder = "{" + entry.getKey() + "}";
-      templateContent = templateContent.replace(placeholder, entry.getValue());
+      templateContent =
+              templateContent.replace(placeholder, entry.getValue());
     }
     templateData.put("templateContent", templateContent);
 
