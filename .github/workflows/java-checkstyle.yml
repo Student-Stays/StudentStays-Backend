@@ -1,14 +1,12 @@
 name: Java Checkstyle
 
 on:
-  # Trigger analysis when pushing in master or pull requests, and when creating
-  # a pull request.
   push:
     branches:
       - main
       - "0.[0-9]+.[0-9]+"
   pull_request_target:
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
@@ -16,8 +14,10 @@ permissions:
 concurrency:
   group: java-checkstyle-${{ github.head_ref }}
   cancel-in-progress: true
+
 jobs:
   java-checkstyle:
+    name: Java Checkstyle
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -33,23 +33,6 @@ jobs:
           large-packages: false
           swap-storage: true
           docker-images: false
-      - name: Wait for the labeler
-        uses: lewagon/wait-on-check-action@v1.3.4
-        if: ${{ github.event_name == 'pull_request_target' }}
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          check-name: Team Label
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 90
-
-      - name: Verify PR labels
-        uses: jesusvasquez333/verify-pr-label-action@v1.4.0
-        if: ${{ github.event_name == 'pull_request_target' }}
-        with:
-          github-token: '${{ secrets.GITHUB_TOKEN }}'
-          valid-labels: 'safe to test'
-          pull-request-number: '${{ github.event.pull_request.number }}'
-          disable-reviews: true  # To not auto approve changes
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -86,5 +69,4 @@ jobs:
 
       - name: Java checkstyle failed, check the comment in the PR
         if: steps.git.outcome != 'success'
-        run: |
-          exit 1
+        run: exit 1
